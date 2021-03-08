@@ -23,9 +23,14 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class SubcategorySerializer(serializers.ModelSerializer):
+    quantity = serializers.SerializerMethodField()
+
     class Meta:
         model = Subcategory
         fields = '__all__'
+
+    def get_quantity(self, obj):
+        return Product.objects.filter(subcategory=obj).count()
 
 
 class CategorySerializer(serializers.ModelSerializer):
