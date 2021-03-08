@@ -15,10 +15,10 @@ class ProductList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Product.objects.all()
-        feature = self.kwargs['feature']
-        value = self.kwargs['value']
-        print(feature, value)
-        if feature != None and value != None:
+        feature = self.kwargs.get('feature', None)
+        value = self.kwargs.get('value', None)
+
+        if feature and value:
             queryset = Product.objects.filter(
                         productfields__feature=feature,
                         productfields__value=value
