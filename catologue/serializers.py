@@ -1,21 +1,21 @@
 from .models import Category
 from .models import Subcategory
 from .models import Product
-from .models import ProductFields
+from .models import ProductValues
 from rest_framework import serializers
 
 
-class ProductFieldsSerializer(serializers.ModelSerializer):
+class ProductValuesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductFields
+        model = ProductValues
         fields = '__all__'
 
     def to_representation(self, instance):
-        return {instance.feature: instance.value}
+        return {instance.feature.feature: instance.value}
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    productfields_set = ProductFieldsSerializer(many=True)
+    productvalues_set = ProductValuesSerializer(many=True)
 
     class Meta:
         model = Product

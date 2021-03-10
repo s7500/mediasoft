@@ -17,11 +17,11 @@ class ProductList(generics.ListAPIView):
         queryset = Product.objects.all()
         feature = self.kwargs.get('feature', None)
         value = self.kwargs.get('value', None)
-
+        print(feature, value)
         if feature and value:
             queryset = Product.objects.filter(
-                        productfields__feature=feature,
-                        productfields__value=value
+                        productvalues__feature__feature=feature,
+                        productvalues__value=value
                     )
 
         return queryset

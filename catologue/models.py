@@ -11,15 +11,36 @@ class Category(models.Model):
 
 
 class Subcategory(models.Model):
-    catergory = models.ForeignKey(Category, on_delete=models.CASCADE)
-    subcategory_name = models.TextField(default=None)
+    catergory = models.ForeignKey(
+                    Category, 
+                    on_delete=models.CASCADE, 
+                    blank=True,
+                    null=True,
+                    default = None,
+                )
+    subcategory_parent = models.ForeignKey(
+                            'self', 
+                            on_delete=models.CASCADE, 
+                            null=True,
+                            default = None,
+                            blank = True
+                        )
+    subcategory_name = models.CharField(max_length = 32)
 
     def __str__(self):
         return self.subcategory_name
 
 
+class SubcategoryFeature(models.Model):
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
+    feature = models.CharField(max_length = 32)
+
+    def __str__(self):
+        return self.feature
+
+
 class Manufacturer(models.Model):
-    manufacturer_name = models.TextField(default=None)
+    manufacturer_name = models.CharField(max_length=32, default=None)
 
     def __str__(self):
         return self.manufacturer_name
@@ -27,8 +48,7 @@ class Manufacturer(models.Model):
 
 class Product(models.Model):
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
-    product_name = models.TextField()
-    price = models.IntegerField(default=None)
+    product_name = models.CharField(max_length = 32)
     manufacturer = models.ForeignKey(
                     Manufacturer, 
                     on_delete=models.PROTECT, 
@@ -39,10 +59,10 @@ class Product(models.Model):
         return self.product_name
 
 
-class ProductFields(models.Model):
+class ProductValues(models.Model):
+    feature = models.ForeignKey(SubcategoryFeature, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    feature = models.TextField()
-    value = models.CharField(max_length=50)
+    value = models.CharField(max_length = 32, blank=True)
 
     def __str__(self):
-        return f'{self.feature}: {self.value}'
+        return f'{self.feature.feature}: {self.value}'
