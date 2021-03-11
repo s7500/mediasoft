@@ -4,19 +4,20 @@ import uuid
 
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    category_name = models.SlugField()
+    category_name = models.SlugField(unique=True)
 
     def __str__(self):
         return self.category_name
 
 
 class Subcategory(models.Model):
-    catergory = models.ForeignKey(
+    category = models.ForeignKey(
                     Category, 
-                    on_delete=models.CASCADE, 
+                    on_delete=models.CASCADE,
+                    to_field = 'category_name',
                     blank=True,
                     null=True,
-                    default = None,
+                    default = None
                 )
     subcategory_parent = models.ForeignKey(
                             'self', 
@@ -39,30 +40,27 @@ class SubcategoryFeature(models.Model):
         return self.feature
 
 
-class Manufacturer(models.Model):
-    manufacturer_name = models.CharField(max_length=32, default=None)
-
+class SubcategoryValues(models.Model):
+    subcategoryfeature = models.ForeignKey(SubcategoryFeature, on_delete=models.CASCADE)
+    value = models.CharField(max_length = 32)
+    
     def __str__(self):
-        return self.manufacturer_name
+        return self.value
+
 
 
 class Product(models.Model):
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     product_name = models.CharField(max_length = 32)
-    manufacturer = models.ForeignKey(
-                    Manufacturer, 
-                    on_delete=models.PROTECT, 
-                    blank=True
-                )
 
     def __str__(self):
         return self.product_name
 
 
-class ProductValues(models.Model):
-    feature = models.ForeignKey(SubcategoryFeature, on_delete=models.CASCADE)
+class ProductItems(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    value = models.CharField(max_length = 32, blank=True)
+    feature = models.ForeignKey(SubcategoryFeature, on_delete=models.CASCADE)
+    value = models.ForeignKey(SubcategoryValues, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.feature.feature}: {self.value}'
+        return f'{self.feature.feature}: {self.value.value}'

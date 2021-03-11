@@ -3,29 +3,28 @@ from .models import Category
 from .models import Product
 from .models import Subcategory
 from .models import SubcategoryFeature
-from .models import Manufacturer
-from .models import ProductValues
+from .models import SubcategoryValues
+from .models import ProductItems
 
 
-class ProductValuesInline(admin.TabularInline):
-    model = ProductValues
+class ProductItemsInline(admin.TabularInline):
+    model = ProductItems
     extra = 1
 
 
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductValuesInline]
+    inlines = [ProductItemsInline]
 
 
-class SubcategoryFeatureInline(admin.TabularInline):
-    model = SubcategoryFeature
-    extra = 1
+class SubcategoryValuesInline(admin.TabularInline):
+    model = SubcategoryValues
 
 
-class SubcategoryAdmin(admin.ModelAdmin):
-    inlines = [SubcategoryFeatureInline]
+class SubcategoryFeatureAdmin(admin.ModelAdmin):
+    inlines = [SubcategoryValuesInline]
 
 
 admin.site.register(Category)
-admin.site.register(Subcategory, SubcategoryAdmin)
-admin.site.register(Manufacturer)
+admin.site.register(Subcategory)
+admin.site.register(SubcategoryFeature, SubcategoryFeatureAdmin)
 admin.site.register(Product, ProductAdmin)

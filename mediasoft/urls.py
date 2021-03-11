@@ -5,7 +5,9 @@ from rest_framework import routers
 
 
 router = routers.DefaultRouter()
-router.register(r'categories', views.CategoryViewSet)
+router.register(r'categories', views.CategoriesViewSet, basename='category-list')
+router.register(r'subcategory', views.SubcategoryList, basename='subcategory-list')
+router.register(r'product', views.ProductDetail, basename='product-detail')
 
 
 urlpatterns = [

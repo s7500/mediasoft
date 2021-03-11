@@ -17,18 +17,36 @@ class ProductList(generics.ListAPIView):
         queryset = Product.objects.all()
         feature = self.kwargs.get('feature', None)
         value = self.kwargs.get('value', None)
-        print(feature, value)
         if feature and value:
             queryset = Product.objects.filter(
-                        productvalues__feature__feature=feature,
-                        productvalues__value=value
+                        productitems__feature__feature=feature,
+                        productitems__value__value=value
                     )
 
         return queryset
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class ProductDetail(viewsets.ModelViewSet):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        id = self.kwargs.get('pk')
+        queryset = Product.objects.filter(id=id)
+        
+        return queryset
+
+
+class CategoriesViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    filterset_fields = '__all__'
     
+
+class SubcategoryList(viewsets.ModelViewSet):
+    """
+    idk what hell is going on
+    This is view o to return all subcategoty belong the category, but it isn't
+    """
+    serializer_class = SubcategorySerializer
+    queryset = Subcategory.objects.all()
+
+
